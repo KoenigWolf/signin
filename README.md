@@ -1,7 +1,6 @@
 ### **📄 README.md - Clerk を使用した Sign-in / Sign-up 機能の実装**  
 
-```md
-# 🛠 Portfolio Auth - Clerk を利用した認証機能
+### 🛠 Portfolio Auth - Clerk を利用した認証機能
 
 このプロジェクトでは **[Clerk](https://clerk.com/)** を使用して **Sign-in / Sign-up** の認証機能を実装しました。  
 Next.js (`app router`) + Clerk を組み合わせ、シンプルかつ安全なユーザー管理を提供します。
