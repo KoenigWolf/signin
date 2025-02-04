@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### **📄 README.md - Clerk を使用した Sign-in / Sign-up 機能の実装**  
 
-## Getting Started
+```md
+# 🛠 Portfolio Auth - Clerk を利用した認証機能
 
-First, run the development server:
+このプロジェクトでは **[Clerk](https://clerk.com/)** を使用して **Sign-in / Sign-up** の認証機能を実装しました。  
+Next.js (`app router`) + Clerk を組み合わせ、シンプルかつ安全なユーザー管理を提供します。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 📌 インストール & セットアップ
+
+### 1️⃣ **Clerk の API キーを取得**
+1. [Clerk Dashboard](https://dashboard.clerk.com/) にログイン  
+2. 新しいプロジェクトを作成  
+3. `.env.local` に以下の環境変数を追加
+```sh
+NEXT_PUBLIC_CLERK_FRONTEND_API=<YOUR_FRONTEND_API>
+CLERK_SECRET_KEY=<YOUR_SECRET_KEY>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2️⃣ **必要なパッケージをインストール**
+```sh
+npm install @clerk/nextjs
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🚀 実装内容
 
-To learn more about Next.js, take a look at the following resources:
+### **🖥️ `middleware.ts` - Clerk の認証をミドルウェアで適用**
+```ts
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+const isPublicRoute = createRouteMatcher([
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+])
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect()
+  }
+})
 
-## Deploy on Vercel
+export const config = {
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
+}
+```
+**📌 ポイント**
+- `/sign-in` と `/sign-up` は **公開ルート** として認証不要
+- それ以外のページは **認証必須**（未認証ユーザーは `sign-in` にリダイレクト）
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### **🔐 `app/sign-in/page.tsx` - Sign-in ページ**
+```tsx
+'use client'
+
+import { SignIn } from '@clerk/nextjs'
+
+export default function Page() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <SignIn />
+    </div>
+  )
+}
+```
+**📌 ポイント**
+- `SignIn` コンポーネントを使用し、簡単にログイン画面を表示
+- `flexbox` を使って **画面中央に配置**
+
+---
+
+### **📝 `layout.tsx` - アプリ全体の認証管理**
+```tsx
+import { ClerkProvider } from '@clerk/nextjs'
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <ClerkProvider>{children}</ClerkProvider>
+}
+```
+**📌 ポイント**
+- **ClerkProvider** を全体でラップし、認証情報を管理
+
+---
+
+## ✅ **認証の動作確認**
+1. **`npm run dev` でアプリを起動**
+2. `/sign-in` にアクセスし、ログインテスト
+3. **未ログイン時に認証必須ページ (`/dashboard` など) にアクセスすると、`sign-in` にリダイレクトされる**
+
+---
+
+## 📌 **今後の拡張**
+- **OAuth 認証 (Google, GitHub, Twitter) の追加**
+- **ユーザープロフィールページの実装**
+- **認証付き API (`/api/protected`) の実装**
+```
+
+---
+
