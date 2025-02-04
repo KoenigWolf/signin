@@ -8,7 +8,7 @@ Next.js (`app router`) + Clerk を組み合わせ、シンプルかつ安全な�
 
 ---
 
-## 📌 インストール & セットアップ
+### 📌 インストール & セットアップ
 
 ### 1️⃣ **Clerk の API キーを取得**
 1. [Clerk Dashboard](https://dashboard.clerk.com/) にログイン  
@@ -95,14 +95,3 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 1. **`npm run dev` でアプリを起動**
 2. `/sign-in` にアクセスし、ログインテスト
 3. **未ログイン時に認証必須ページ (`/dashboard` など) にアクセスすると、`sign-in` にリダイレクトされる**
-
----
-
-## 📌 **今後の拡張**
-- **OAuth 認証 (Google, GitHub, Twitter) の追加**
-- **ユーザープロフィールページの実装**
-- **認証付き API (`/api/protected`) の実装**
-```
-
----
-
