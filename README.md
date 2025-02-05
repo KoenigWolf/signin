@@ -1,4 +1,4 @@
-### **📄 README.md - Clerk を使用した Sign-in / Sign-up 機能の実装**  
+### **📄 Clerk を使用した Sign-in / Sign-up 機能の実装**  
 
 ### 🛠 Portfolio Auth - Clerk を利用した認証機能
 
